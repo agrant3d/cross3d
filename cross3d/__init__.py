@@ -124,22 +124,12 @@ def init():
 			pckg = packageName(modname)
 
 			# Attempt to import and init this modname.
-			try:
-				__import__(pckg)
-			except ImportError:
-				print('The module "{}" failed to import.. continuing'.format(modname))
-				continue
+			__import__(pckg)
 
 			mod = sys.modules[pckg]
-			try:
+			if mod.test():
 				mod.init()
-				print('The module "{}" initialized successfully. Breaking.'.format(modname))
-				# The module successfully initalized no need to try any other modules.
 				break
-			except:
-				print('The module "{}" did not initialize successfully.'.format(modname))
-				print sys.exc_info()
-				continue
 
 	# import the abstract api for default implementations of api
 	import abstract

@@ -2,7 +2,7 @@
 #	\namespace	cross3d.softimage
 #
 #	\remarks	The cross3d.softimage package contains the necessary classes to control Softimage.
-#	
+#
 #	\author		douglas
 #	\author		Blur Studio
 #	\date		03/15/10
@@ -10,11 +10,18 @@
 
 import external
 
+def test():
+	try:
+		from PySoftimage import xsi
+	except ImportError:
+		return False
+	return True
+
 def init():
-	
+
 	# Making sure we can import the layer.
 	from PySoftimage import xsi
-	
+
 	# Importing the layer's classes.
 	import softimageuserprops
 	import softimageundocontext

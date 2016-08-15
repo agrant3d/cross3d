@@ -80,6 +80,30 @@ class MotionBuilderApplication(AbstractApplication):
         self._fbapp = mob.FBApplication()
         super(MotionBuilderApplication, self).__init__()
 
+    @staticmethod
+    def _get_dialog_parent():
+        """
+        Find the main Motionbuilder window/QWidget.  This
+        will be used as the parent for all dialogs created
+        by show_modal or show_dialog
+
+        :returns: QWidget if found or None if not
+        """
+        from Qt import QtGui
+
+        # get all top level windows:
+        top_level_windows = QtGui.QApplication.topLevelWidgets()
+
+        # from this list, find the main application window.
+        for w in top_level_windows:
+            if (type(w) == QtGui.QWidget        # window is always QWidget
+                and len(w.windowTitle()) > 0    # window always has a title/caption
+                and w.parentWidget() == None):  # parent widget is always None
+                return w
+
+        return None
+
+
     def _mobCallback(self, caller, event):
         # Note: if a error is raised in this function, it will disconnect the callback from motion builder.
         eType = event.Type
@@ -172,6 +196,9 @@ class MotionBuilderApplication(AbstractApplication):
 
     def year(self):
         return self.version()
+
+    def mainWindow(self):
+        return self._get_dialog_parent()
 
     def createQtTool(self, name, widget):
         gToolName = name

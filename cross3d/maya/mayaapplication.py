@@ -25,6 +25,7 @@ class MayaDockableWidget(MayaQWidgetDockableMixin, QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(MayaDockableWidget, self).__init__(parent=parent)
 
+
 class MayaApplication(AbstractApplication):
     _callbackMap = {}
     def __init__(self):
@@ -33,14 +34,14 @@ class MayaApplication(AbstractApplication):
         self._scene = None
 
     @staticmethod
-    def getMayaWindow():
+    def mayaWindow():
         """
         Get the main Maya window as a QtGui.QMainWindow instance
         @return: QtGui.QMainWindow instance of the top level Maya windows
         """
         ptr = apiUI.MQtUtil.mainWindow()
         if ptr is not None:
-            return shiboken.wrapInstance(long(ptr), QtGui.QWidget)
+            return shiboken.wrapInstance(long(ptr), QtWidgets.QWidget)
 
     def _wildcardToRegex(self, wildcard):
         """ Convert a * syntax wildcard string into a parsable regular expression
@@ -166,15 +167,18 @@ class MayaApplication(AbstractApplication):
     def year(self):
         return self.version()
 
-    def createQtTool(self, name, widget):
-        tool = MayaDockableWidget()
+    def mainWindow(self):
+        return self.mayaWindow()
 
+    def createQtTool(self, name, widget, dockable=True, width=600, height=400):
+        tool = MayaDockableWidget()
         widget = widget(parent=tool)
 
         if name:
             tool.setWindowTitle(name)
-
-        tool.show(dockable=True)
+        tool.setCentralWidget(widget)
+        tool.resize(width, height)
+        tool.show(dockable=dockable)
         return tool
 
 # register the symbol

@@ -313,7 +313,14 @@ class AbstractApplication(QObject):
 		"""
 		return default
 
-	def createQtTool(self, name, widget):
+	@abstractmethod
+	def mainWindow(self):
+		return False
+
+	def createQtTool(self, name, widget, **kwargs):
+		return False
+
+	def createQtDialog(self, dialog):
 		return False
 
 # register the symbol
