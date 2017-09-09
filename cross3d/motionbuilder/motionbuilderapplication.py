@@ -21,8 +21,7 @@ import sys
 import os
 import pyfbsdk as mob
 import pyfbsdk_additions as mob_additions
-from Qt import QtGui
-from Qt import shiboken
+from Qt import QtGui, QtCompat
 
 import cross3d
 from cross3d.abstract.abstractapplication import AbstractApplication
@@ -48,13 +47,13 @@ class NativeWidgetHolder(mob.FBWidgetHolder):
         #
         # Only a single widget is allowed to be the *direct* child of the IN parent widget.
         #
-        qparent = shiboken.wrapInstance(pWidgetParent, QtGui.QWidget)
+        qparent = QtCompat.wrapInstance(pWidgetParent, QtGui.QWidget)
         self.mNativeQtWidget = self._widgetClass(qparent)
 
         #
         # return the memory address of the *single direct* child QWidget.
         #
-        return shiboken.getCppPointer(self.mNativeQtWidget)[0]
+        return QtCompat.getCppPointer(self.mNativeQtWidget)[0]
 
 class NativeQtWidgetTool(mob.FBTool):
     def BuildLayout(self):
